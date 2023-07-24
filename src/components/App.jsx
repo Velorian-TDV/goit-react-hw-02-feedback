@@ -1,8 +1,8 @@
 import React from "react";
-import FeedbackOptions from "./FeedbackOptions";
-import Statistics from "./Statistics";
-import Section from "./Section";
-import { Wrapper } from "./App.styled";
+import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
+import Statistics from "./Statistics/Statistics";
+import Section from "./Section/Section";
+import { Wrapper, GlobalStyles } from "./App.styled";
 
 class App extends React.Component {
 
@@ -20,34 +20,40 @@ class App extends React.Component {
         });
     };
 
-    total = ({ good, neutral, bad }) => {
+    total = () => {
+        const { good, neutral, bad } = this.state;
         return good + neutral + bad;
     };
 
-    positivePercentage = ({ good, neutral, bad }) => {
+    positivePercentage = () => {
+        const { good } = this.state;
         return (
-            this.total({ good, neutral, bad }) === 0 ? 0 :
-                Math.round((good / this.total({ good, neutral, bad })) * 100)
+            this.total() === 0 ? 0 :
+                Math.round((good / this.total()) * 100)
         );
     };
 
     render() {
+        const { good, neutral, bad } = this.state;
+        const stateKeys = Object.keys(this.state);
+
         return (
             <Wrapper>
+                <GlobalStyles />
                 <Section title={'Please leave feedback'}>
                     <FeedbackOptions
-                        options={['good', 'neutral', 'bad']}
+                        options={stateKeys}
                         onLeaveFeedback={this.feedbackClickHandle}
                     />
                 </Section>
 
                 <Section title={'Statistics'}>
                     <Statistics
-                        good={this.state.good}
-                        neutral={this.state.neutral}
-                        bad={this.state.bad}
-                        total={this.total}
-                        positivePercentage={this.positivePercentage}
+                        good={good}
+                        neutral={neutral}
+                        bad={bad}
+                        total={this.total()}
+                        positivePercentage={this.positivePercentage()}
                     />
                 </Section>
             </Wrapper>
